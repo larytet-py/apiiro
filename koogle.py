@@ -52,9 +52,9 @@ def get_top_scores(scores: Dict[str, int], size: int = 10) -> List[str, int]:
 
 
 class SubstringIterator:
-    def __init__(self, s: str):
+    def __init__(self, s: str, min_len: int = 1):
         self.s = s
-        self.curent = 1
+        self.curent = min_len
 
     def __iter__(self):
         return self
