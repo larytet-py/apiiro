@@ -35,7 +35,7 @@ class Koogle:
     '''
     Return top matches for the pattern
     '''
-    def Search(self, pattern: str, size: int) -> Dict[str, int]:
+    def Search(self, pattern: str) -> Dict[str, int]:
         allMatchingScores = {}
         for s in self.lookup[pattern]:
             # b, bo, boo, book, ...
