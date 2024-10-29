@@ -41,7 +41,7 @@ class Koogle:
 '''
 return up to top "size" scores
 '''
-def getTopScores(scores: Dict[str, int], size: int):
+def getTopScores(scores: Dict[str, int], size: int) -> List[str, int]:
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     size = min(size, len(sorted_scores))
 
@@ -56,7 +56,7 @@ class SubstringIterator:
     def __iter__(self):
         return self
 
-    def __next__(self):
+    def __next__(self) -> str:
         if self.curent > len(self.s):
             raise StopIteration
         res = self.s[:self.curent]
