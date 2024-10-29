@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import List, Dict, Tuple
+from typing import List, Dict, Set
 
 '''
 Object Koogle with API Search and Suggest
@@ -8,7 +8,7 @@ Match from the first symbol
 class Koogle:
     def __init__(self):
         self.score: Dict[str, int]  = {}
-        self.lookup: Dict[str, set[str]]  = {}
+        self.lookup: Dict[str, Set[str]]  = {}
 
     '''
     Update tables of scroes and table of lookups
