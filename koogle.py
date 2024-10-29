@@ -2,46 +2,44 @@ from collections import defaultdict
 from typing import List, Dict, Tuple
 
 '''
-Object Koogler with API Update and Lookup 
+Object Koogle with API Search and Suggest
 Match from the first symbol
 '''
 class Koogle:
     def __init__(self):
         self.score: Dict[str, int]  = {}
-        self.lookup: defaultdict = defaultdict(list)
 
     '''
     Update tables of scroes and table of lookups
+    The function is being calle for all sub strings
+    "b", "bo", "boo", "book", ...
     '''
-    def Update(self, pattern: str):
-        iterator = SubstringIterator(pattern)
-        for  prefix in iterator:
-            if prefix not in self.score:
-                self.score[prefix] = 0
-            if prefix not in self.lookup:
-                self.lookup = []
-
-            self.score[prefix] += 1
-            self.lookup[prefix].append(prefix)
-            
+    def Suggest(self, pattern: str):
+        if pattern not in self.score:
+            # {"boo": 0}
+            self.score[pattern] = 0
+        # {"boo": 1}
+        self.score[pattern] += 1            
+           
 
     '''
     Return top matches for the pattern
     '''
-    def Suggest(self, pattern: str, size: int):
+    def Search(self, pattern: str, size: int) -> Dict[str, int]:
         iterator = SubstringIterator(pattern)
         allMatchingScores = {}
         for prefix in iterator:
-            for s in self.lokup[prefix]:
+            # b, bo, boo, book, ...
+            for s in self.score[prefix]:
                 allMatchingScores[s] = self.score[s]
 
-        return getTopScores(allMatchingScores)
+        return get_top_scores(allMatchingScores)
 
 
 '''
 return up to top "size" scores
 '''
-def getTopScores(scores: Dict[str, int], size: int) -> List[str, int]:
+def get_top_scores(scores: Dict[str, int], size: int) -> List[str, int]:
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     size = min(size, len(sorted_scores))
 
