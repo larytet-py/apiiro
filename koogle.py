@@ -39,7 +39,7 @@ class Koogle:
 '''
 return up to top "size" scores
 '''
-def get_top_scores(scores: Dict[str, int], size: int) -> List[str, int]:
+def get_top_scores(scores: Dict[str, int], size: int = 10) -> List[str, int]:
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     size = min(size, len(sorted_scores))
 
