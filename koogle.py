@@ -14,19 +14,20 @@ class Koogle:
     The function is being calle for all sub strings
     "b", "bo", "boo", "book", ...
     '''
-    def Suggest(self, pattern: str):
+    def suggest(self, pattern: str):
         if pattern not in self.score:
             # {"boo": 0}
             self.score[pattern] = 0
 
-        if pattern not in self.lookup:
-            self.lookup[pattern] = {}
 
         # {"boo": 1}
         self.score[pattern] += 1            
 
         iterator = SubstringIterator(pattern)
         for prefix in iterator:
+            if prefix not in self.lookup:
+                self.lookup[prefix] = set()
+
             # b, bo, boo, book, ...
             self.lookup[prefix].add(pattern)
 
@@ -34,7 +35,7 @@ class Koogle:
     '''
     Return top matches for the pattern
     '''
-    def Search(self, pattern: str) -> Dict[str, int]:
+    def search(self, pattern: str) -> Dict[str, int]:
         allMatchingScores = {}
         for s in self.lookup[pattern]:
             # b, bo, boo, book, ...

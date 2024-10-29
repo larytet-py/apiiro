@@ -1,6 +1,6 @@
 # PYTHONPATH=. pytest
 import pytest
-from koogle import Koogle, get_top_scores
+from koogle import Koogle, get_top_scores, SubstringIterator
 
 @pytest.fixture
 def koogle_instance():
@@ -11,15 +11,21 @@ def test_get_top_scores():
     top_scores = get_top_scores(scores, 2)
     assert top_scores == [("b", 3), ("a", 2)]  # "b" should be the top score
 
-def test_update_new_prefix(koogle_instance):
-    koogle_instance.update("apple")
+def test_suggest(koogle_instance):
+    iterator = SubstringIterator("apple")
+    for prefix in iterator:
+        koogle_instance.suggest(prefix)
+
+    print(koogle_instance.lookup)
+             
+
     assert koogle_instance.score == {"a": 1, "ap": 1, "app": 1, "appl": 1, "apple": 1}
     assert koogle_instance.lookup == {
-        "a": ["a"],
-        "ap": ["ap"],
-        "app": ["app"],
-        "appl": ["appl"],
-        "apple": ["apple"]
+        "a": {"a", "ap", "app", "appl", "apple"},
+        "ap": {"ap", "app", "appl", "apple"},
+        "app": {"app", "appl", "apple"},
+        "appl": {"appl", "apple"},
+        "apple": {"apple"}
     }
 
 def test_update_existing_prefix(koogle_instance):
