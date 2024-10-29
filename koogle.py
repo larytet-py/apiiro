@@ -31,6 +31,8 @@ class Koogle:
         for prefix in iterator:
             # b, bo, boo, book, ...
             for s in self.score[prefix]:
+                if len(prefix) < len(pattern):
+                    continue
                 allMatchingScores[s] = self.score[s]
 
         return get_top_scores(allMatchingScores)
