@@ -1,45 +1,77 @@
-import pytest
+from collections import defaultdict
+from typing import List, Dict, Set
+
+'''
+Object Koogle with API Search and Suggest
+Match from the first symbol
+'''
+class Koogle:
+    def __init__(self):
+        self.score: Dict[str, int]  = {}
+        self.lookup: Dict[str, Set[str]]  = {}
+
+    '''
+    Update tables of scroes and table of lookups
+    The function is being calle for all sub strings
+    "b", "bo", "boo", "book", ...
+    '''
+    def Suggest(self, pattern: str):
+        if pattern not in self.score:
+            # {"boo": 0}
+            self.score[pattern] = 0
+
+        if pattern not in self.lookup:
+            self.lookup[pattern] = {}
+
+        # {"boo": 1}
+        self.score[pattern] += 1            
+
+        iterator = SubstringIterator(pattern)
+        for prefix in iterator:
+            # b, bo, boo, book, ...
+            self.lookup[prefix].add(pattern)
 
 
-@pytest.fixture
-def koogle_instance():
-    return koogle.Koogle()
+    '''
+    Return top matches for the pattern
+    '''
+    def Search(self, pattern: str) -> Dict[str, int]:
+        allMatchingScores = {}
+        for s in self.lookup[pattern]:
+            # b, bo, boo, book, ...
+            if len(s) < len(pattern):
+                # if given "boo" should I ignore "b", "bo"?
+                continue
 
-def test_get_top_scores():
-    scores = {"a": 2, "b": 3, "c": 1}
-    top_scores = koogle.get_top_scores(scores, 2)
-    assert top_scores == [("b", 3), ("a", 2)]  # "b" should be the top score
+            # if given "boo" consider "boo", "book", "boom", ...
+            allMatchingScores[s] = self.score[s]
 
-def test_update_new_prefix(koogle_instance):
-    koogle_instance.update("apple")
-    assert koogle_instance.score == {"a": 1, "ap": 1, "app": 1, "appl": 1, "apple": 1}
-    assert koogle_instance.lookup == {
-        "a": ["a"],
-        "ap": ["ap"],
-        "app": ["app"],
-        "appl": ["appl"],
-        "apple": ["apple"]
-    }
+        return get_top_scores(allMatchingScores)
 
-def test_update_existing_prefix(koogle_instance):
-    koogle_instance.update("apple")
-    koogle_instance.update("apricot")
-    assert koogle_instance.score["a"] == 2
-    assert koogle_instance.lookup["a"] == ["a", "a"]  # Should have "a" from both words
 
-def test_suggest_empty_lookup(koogle_instance):
-    suggestions = koogle_instance.suggest("a", 3)
-    assert suggestions == []
+'''
+return up to top "size" scores
+'''
+def get_top_scores(scores: Dict[str, int], size: int = 10) -> List[str, int]:
+    sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    size = min(size, len(sorted_scores))
 
-def test_suggest_with_one_prefix(koogle_instance):
-    koogle_instance.update("banana")
-    koogle_instance.update("bandana")
-    suggestions = koogle_instance.suggest("ba", 2)
-    assert suggestions == [("ba", 2)]  # "ba" has 2 occurrences
+    return sorted_scores[:size]
 
-def test_suggest_multiple_matches(koogle_instance):
-    koogle_instance.update("cherry")
-    koogle_instance.update("cherry")
-    koogle_instance.update("chocolate")
-    suggestions = koogle_instance.suggest("ch", 2)
-    assert suggestions == [("ch", 3)]  # "ch" should have 3 occurrences
+
+class SubstringIterator:
+    def __init__(self, s: str, min_len: int = 1):
+        self.s = s
+        self.curent = min_len
+
+    def __iter__(self):
+        return self
+
+    def __next__(self) -> str:
+        if self.curent > len(self.s):
+            raise StopIteration
+        res = self.s[:self.curent]
+        self.curent += 1
+
+    
+
