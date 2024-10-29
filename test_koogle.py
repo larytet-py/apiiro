@@ -16,9 +16,6 @@ def test_suggest(koogle_instance):
     for prefix in iterator:
         koogle_instance.suggest(prefix)
 
-    print(koogle_instance.lookup)
-             
-
     assert koogle_instance.score == {"a": 1, "ap": 1, "app": 1, "appl": 1, "apple": 1}
     assert koogle_instance.lookup == {
         "a": {"a", "ap", "app", "appl", "apple"},
@@ -28,11 +25,17 @@ def test_suggest(koogle_instance):
         "apple": {"apple"}
     }
 
-def test_update_existing_prefix(koogle_instance):
-    koogle_instance.update("apple")
-    koogle_instance.update("apricot")
-    assert koogle_instance.score["a"] == 2
-    assert koogle_instance.lookup["a"] == ["a", "a"]  # Should have "a" from both words
+def test_search(koogle_instance):
+    iterator = SubstringIterator("apple")
+    for prefix in iterator:
+        koogle_instance.suggest(prefix)
+
+    iterator = SubstringIterator("app")
+    for prefix in iterator:
+        koogle_instance.suggest(prefix)
+
+    assert koogle_instance.search("apple") == ""
+
 
 def test_suggest_empty_lookup(koogle_instance):
     suggestions = koogle_instance.suggest("a", 3)
