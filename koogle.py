@@ -1,21 +1,25 @@
+from collections import defaultdict
+from typing import List, Dict, Tuple
+
 '''
 Object Koogler with API Update and Lookup 
 Match from the first symbol
 '''
 class Koogle:
     def __init__(self):
-        self.score = {}
-        self.lookup = {}
+        self.score: Dict[str, int]  = {}
+        self.lookup: defaultdict = defaultdict(list)
 
     '''
     Update tables of scroes and table of lookups
     '''
-    def Update(self, pattern):
+    def Update(self, pattern: str):
         iterator = SubstringIterator(pattern)
         for  prefix in iterator:
             if prefix not in self.score:
                 self.score[prefix] = 0
-                self.lokup = []
+            if prefix not in self.lookup:
+                self.lookup = []
 
             self.score[prefix] += 1
             self.lookup[prefix].append(prefix)
@@ -24,7 +28,7 @@ class Koogle:
     '''
     Return top matches for the pattern
     '''
-    def Suggest(self, pattern, size):
+    def Suggest(self, pattern: str, size: int):
         iterator = SubstringIterator(pattern)
         allMatchingScores = {}
         for prefix in iterator:
@@ -34,15 +38,18 @@ class Koogle:
         return getTopScores(allMatchingScores)
 
 
+'''
+return up to top "size" scores
+'''
+def getTopScores(scores: Dict[str, int], size: int):
+    sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    size = min(size, len(sorted_scores))
 
-def getTopScores(scores, size):
-    sortes_scores = sorted(scores.items()), key=lambda x: x[1], reverse = True
-    size = min(size, len(sortes_scores))
-    return sortes_scores[:size]
+    return sorted_scores[:size]
 
 
 class SubstringIterator:
-    def __init__(self, s):
+    def __init__(self, s: str):
         self.s = s
         self.curent = 1
 
