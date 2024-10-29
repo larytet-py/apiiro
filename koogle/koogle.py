@@ -1,5 +1,5 @@
 import pytest
-import koogle
+
 
 @pytest.fixture
 def koogle_instance():
