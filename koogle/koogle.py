@@ -1,5 +1,4 @@
-from collections import defaultdict
-from typing import List, Dict, Set
+from typing import List, Dict, Set, Tuple
 
 '''
 Object Koogle with API Search and Suggest
@@ -52,26 +51,21 @@ class Koogle:
 '''
 return up to top "size" scores
 '''
-def get_top_scores(scores: Dict[str, int], size: int = 10) -> List[str, int]:
+def get_top_scores(scores: Dict[str, int], size: int = 10) -> List[Tuple[str, int]]:
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-    size = min(size, len(sorted_scores))
-
-    return sorted_scores[:size]
-
+    return sorted_scores[:min(size, len(sorted_scores))]
 
 class SubstringIterator:
     def __init__(self, s: str, min_len: int = 1):
         self.s = s
-        self.curent = min_len
+        self.current = min_len
 
     def __iter__(self):
         return self
 
     def __next__(self) -> str:
-        if self.curent > len(self.s):
+        if self.current > len(self.s):
             raise StopIteration
-        res = self.s[:self.curent]
-        self.curent += 1
-
-    
-
+        res = self.s[:self.current]
+        self.current += 1
+        return res
