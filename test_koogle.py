@@ -9,7 +9,7 @@ def koogle_instance():
 def test_get_top_scores():
     scores = {"a": 2, "b": 3, "c": 1}
     top_scores = get_top_scores(scores, 2)
-    assert top_scores == [("b", 3), ("a", 2)]  # "b" should be the top score
+    assert top_scores == [("b", 3), ("a", 2)]
 
 def test_suggest(koogle_instance):
     iterator = SubstringIterator("apple")
