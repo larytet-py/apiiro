@@ -8,6 +8,7 @@ Match from the first symbol
 class Koogle:
     def __init__(self):
         self.score: Dict[str, int]  = {}
+        self.lookup: Dict[str, set[str]]  = {}
 
     '''
     Update tables of scroes and table of lookups
@@ -18,9 +19,18 @@ class Koogle:
         if pattern not in self.score:
             # {"boo": 0}
             self.score[pattern] = 0
+
+        if pattern not in self.lookup:
+            self.lookup[pattern] = {}
+
         # {"boo": 1}
         self.score[pattern] += 1            
-           
+
+        iterator = SubstringIterator(pattern)
+        for prefix in iterator:
+            # b, bo, boo, book, ...
+            self.lookup[prefix].add(pattern)
+
 
     '''
     Return top matches for the pattern
@@ -28,15 +38,14 @@ class Koogle:
     def Search(self, pattern: str, size: int) -> Dict[str, int]:
         iterator = SubstringIterator(pattern)
         allMatchingScores = {}
-        for prefix in iterator:
+        for s in self.lookup[pattern]:
             # b, bo, boo, book, ...
-            for s in self.score[prefix]:
-                if len(prefix) < len(pattern):
-                    # if given "boo" should I ignore "b", "bo"?
-                    continue
+            if len(s) < len(pattern):
+                # if given "boo" should I ignore "b", "bo"?
+                continue
 
-                # if given "boo" consider "boo", "book", "boom", ...
-                allMatchingScores[s] = self.score[s]
+            # if given "boo" consider "boo", "book", "boom", ...
+            allMatchingScores[s] = self.score[s]
 
         return get_top_scores(allMatchingScores)
 
