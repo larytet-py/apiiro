@@ -53,7 +53,8 @@ return up to top "size" scores
 '''
 def get_top_scores(scores: Dict[str, int], size: int = 10) -> List[Tuple[str, int]]:
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-    return sorted_scores[:min(size, len(sorted_scores))]
+    size = min(size, len(sorted_scores))
+    return sorted_scores[:size]
 
 class SubstringIterator:
     def __init__(self, s: str, min_len: int = 1):
