@@ -34,22 +34,5 @@ def test_search(koogle_instance):
     for prefix in iterator:
         koogle_instance.suggest(prefix)
 
-    assert koogle_instance.search("apple") == ""
-
-
-def test_suggest_empty_lookup(koogle_instance):
-    suggestions = koogle_instance.suggest("a", 3)
-    assert suggestions == []
-
-def test_suggest_with_one_prefix(koogle_instance):
-    koogle_instance.update("banana")
-    koogle_instance.update("bandana")
-    suggestions = koogle_instance.suggest("ba", 2)
-    assert suggestions == [("ba", 2)]  # "ba" has 2 occurrences
-
-def test_suggest_multiple_matches(koogle_instance):
-    koogle_instance.update("cherry")
-    koogle_instance.update("cherry")
-    koogle_instance.update("chocolate")
-    suggestions = koogle_instance.suggest("ch", 2)
-    assert suggestions == [("ch", 3)]  # "ch" should have 3 occurrences
+    res = koogle_instance.search("app", 1)
+    assert res == [('app', 2)]

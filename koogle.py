@@ -35,7 +35,7 @@ class Koogle:
     '''
     Return top matches for the pattern
     '''
-    def search(self, pattern: str) -> Dict[str, int]:
+    def search(self, pattern: str, count: int = 10) -> Dict[str, int]:
         allMatchingScores = {}
         for s in self.lookup[pattern]:
             # b, bo, boo, book, ...
@@ -46,16 +46,16 @@ class Koogle:
             # if given "boo" consider "boo", "book", "boom", ...
             allMatchingScores[s] = self.score[s]
 
-        return get_top_scores(allMatchingScores)
+        return get_top_scores(allMatchingScores, count)
 
 
 '''
 return up to top "size" scores
 '''
-def get_top_scores(scores: Dict[str, int], size: int = 10) -> List[Tuple[str, int]]:
+def get_top_scores(scores: Dict[str, int], count: int) -> List[Tuple[str, int]]:
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-    size = min(size, len(sorted_scores))
-    return sorted_scores[:size]
+    count = min(count, len(sorted_scores))
+    return sorted_scores[:count]
 
 class SubstringIterator:
     def __init__(self, s: str, min_len: int = 1):
