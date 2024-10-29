@@ -32,7 +32,7 @@ class Koogle:
             # b, bo, boo, book, ...
             for s in self.score[prefix]:
                 if len(prefix) < len(pattern):
-                    # if given "boo" ignore "b", "bo"
+                    # if given "boo" should I ignore "b", "bo"?
                     continue
 
                 # if given "boo" consider "boo", "book", "boom", ...
