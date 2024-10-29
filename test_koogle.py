@@ -34,5 +34,5 @@ def test_search(koogle_instance):
     for prefix in iterator:
         koogle_instance.suggest(prefix)
 
-    res = koogle_instance.search("app", 1)
+    res = koogle_instance.search("ap", 1)
     assert res == [('app', 2)]
