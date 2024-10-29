@@ -1,13 +1,14 @@
+# PYTHONPATH=. pytest
 import pytest
-import koogle
+from koogle import Koogle, get_top_scores
 
 @pytest.fixture
 def koogle_instance():
-    return koogle.Koogle()
+    return Koogle()
 
 def test_get_top_scores():
     scores = {"a": 2, "b": 3, "c": 1}
-    top_scores = koogle.get_top_scores(scores, 2)
+    top_scores = get_top_scores(scores, 2)
     assert top_scores == [("b", 3), ("a", 2)]  # "b" should be the top score
 
 def test_update_new_prefix(koogle_instance):
